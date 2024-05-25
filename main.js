@@ -1,48 +1,89 @@
-var quotes = [
-    { quote: "“Be yourself; everyone else is already taken.”", author: "Oscar Wilde" },
-    { quote: "“I'm selfish, impatient and a little insecure. I make mistakes, I am out of control and at times hard to handle. But if you can't handle me at my worst, then you sure as hell don't deserve me at my best.”", author: "Marilyn Monroe" },
-    { quote: "“So many books, so little time.”", author: "Frank Zappa" },
-    { quote: "“Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.”", author: "Albert Einstein" },
-    { quote: "“A room without books is like a body without a soul.”", author: "Marcus Tullius Cicero" },
-    { quote: "“Be who you are and say what you feel, because those who mind don't matter, and those who matter don't mind.”", author: "Bernard M. Baruch" },
-    { quote: "“You've gotta dance like there's nobody watching, Love like you'll never be hurt, Sing like there's nobody listening, And live like it's heaven on earth.”", author: "William W. Purkey" },
-    { quote: "“You know you're in love when you can't fall asleep because reality is finally better than your dreams.”", author: "Dr. Seuss" },
-    { quote: "“You only live once, but if you do it right, once is enough.”", author: "Mae West" },
-    { quote: "“Be the change that you wish to see in the world.”", author: "Mahatma Gandhi" }
-]
+var siteName = document.getElementById('name')
+var siteURL = document.getElementById('url')
+var bookMarkRow = document.getElementById('bookMarkRow')
+var submitBtn = document.getElementById('submitBtn')
+var boxInfo = document.getElementById('boxInfo')
+var bookMarkList
 
-var lastIndex = -1
+if (localStorage.getItem('list') == null) {
+    bookMarkList = []
+}
+else {
+    bookMarkList = JSON.parse(localStorage.getItem('list'))
+    display()
+}
 
-function randomIndex() {
-    var quoteIndex = Math.floor(Math.random() * quotes.length)
-    if (quoteIndex == lastIndex) {
-        var quoteIndex = Math.floor(Math.random() * quotes.length)
+submitBtn.onclick = function () {
+    addBookMark()
+}
+
+function addBookMark() {
+    if (validation(siteName) && validation(siteURL)) {
+        var bookMark = {
+            sName: siteName.value,
+            sURL: siteURL.value,
+        }
+        bookMarkList.push(bookMark)
+        localStorage.setItem('list', JSON.stringify(bookMarkList))
+        clearForm()
+        display()
+    }
+}
+
+function clearForm() {
+    siteName.value = null
+    siteURL.value = null
+}
+
+function display() {
+    var box = ''
+    for (var i = 0; i < bookMarkList.length; i++) {
+        box += `
+        <tr>
+            <td>${i + 1}</td>
+            <td>${bookMarkList[i].sName}</td>
+            <td>
+                <button class="btn bg-success text-white" onclick = "visitFun(${i})">
+                    <i class="fa-solid fa-eye pe-2"></i>
+                    Visit
+                </button>
+            </td>
+            <td>
+                <button class="btn bg-danger text-white" onclick = "deleteFun(${i})">
+                    <i class="fa-solid fa-trash-can pe-2"></i>
+                    Delete
+                </button>
+            </td>
+        </tr>
+        `
+    }
+    bookMarkRow.innerHTML = box
+}
+
+function deleteFun(i) {
+    bookMarkList.splice(i, 1)
+    localStorage.setItem('list', JSON.stringify(bookMarkList))
+    display()
+}
+
+function visitFun(i) {
+    var url = bookMarkList[i].sURL
+    window.open(url)
+}
+
+function validation(ele) {
+    var regex = {
+        name: /^[a-zA-Z]{2,}$/,
+        url: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
+    }
+    if (regex[ele.id].test(ele.value)) {
+        ele.classList.add('is-valid')
+        ele.classList.remove('is-invalid')
+        return true
     }
     else {
-        return quoteIndex
+        ele.classList.add('is-invalid')
+        ele.classList.remove('is-valid')
+        return false
     }
-}
-
-function generateQuote() {
-    var quoteIndex = randomIndex()
-    return quotes[quoteIndex]
-}
-
-var getQuote = document.getElementById('quote')
-var getAutor = document.getElementById('author')
-var btnQuote = document.getElementById('btn')
-
-function displayQuote() {
-    var box = `${generateQuote().quote}`;
-    getQuote.innerHTML = box
-}
-
-function displayAuthor() {
-    var box = `― ${generateQuote().author}`;
-    getAutor.innerHTML = box
-}
-
-btnQuote.onclick = function () {
-    displayQuote()
-    displayAuthor()
 }

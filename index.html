@@ -4,19 +4,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="bootstrap.min.css">
-    <title>Quotes App</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Bookmark</title>
 </head>
 
 <body>
-    <div class="container">
-        <h1 class="text-center fw-bolder m-5 p-5">Quote of the Day</h1>
-        <p class="text-center h3">Press the button below to recieve a random quote!</p>
-        <div class="d-flex justify-content-center p-5">
-            <button class="btn btn-primary px-5 py-4" id="btn">New Quote</button>
+    <div class="container d-flex flex-column justify-content-center align-items-center my-5">
+        <h1 class="position-relative">Bookmarker</h1>
+        <div class="dot mt-5"></div>
+        <div class="d-flex flex-column justify-content-center align-items-center w-100 mt-4 gap-4">
+            <h2>
+                <i class="fa-solid fa-bookmark"></i>
+                Bookmark your favorite sites
+                <i class="fa-solid fa-bookmark"></i>
+            </h2>
+            <div class="site-name w-100 d-flex flex-column justify-content-center">
+                <label for="name" class="pb-2 fw-semibold">
+                    <i class="fa-solid fa-book-bookmark pe-2"></i>
+                    Site Name
+                </label>
+                <input type="text" placeholder="Bookmark Name" class="form-control" id="name" oninput="validation(this)">
+            </div>
+            <div class="site-url w-100 d-flex flex-column justify-content-center">
+                <label for="url" class="pb-2 fw-semibold">
+                    <i class="fa-solid fa-link pe-2"></i>
+                    Site URL
+                </label>
+                <input type="url" placeholder="Website URL" class="form-control" id="url" oninput="validation(this)">
+            </div>
+            <button class="py-2 px-5 rounded border-0" id="submitBtn">Submit</button>
         </div>
-        <p class="text-center h3" id="quote"></p>
-        <p class="text-center h3" id="author"></p>
+        <div class="dot my-5"></div>
+        <table class="table text-center bg-light">
+            <thead>
+                <tr>
+                    <th>Index</th>
+                    <th>Website Name</th>
+                    <th>Visit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="bookMarkRow"></tbody>
+        </table>
+    </div>
+    <div
+        class="box-info position-absolute start-0 top-0 w-100 h-100 d-flex justify-content-center align-items-center d-none" id="boxInfo">
+        <div class="box-content bg-white p-4 rounded-2 shadow-lg">
+            <div class="box-header w-100 d-flex justify-content-between align-items-center mb-4">
+                <div class="circles d-flex">
+                    <span class="rounded-circle me-2 bg-danger"></span>
+                    <span class="rounded-circle me-2 bg-warning"></span>
+                    <span class="rounded-circle me-2 bg-success"></span>
+                </div>
+                <button class="btn border-0">
+                    <i class="fa-solid fa-xmark close fs-3"></i>
+                </button>
+            </div>
+            <p class="pb-2">Site Name or Url is not valid, Please follow the rules below :</p>
+            <ol class="rules list-unstyled">
+                <li>
+                    <i class="fa-regular fa-circle-right p-2"></i>
+                    Site name must contain at least 3 characters
+                </li>
+                <li>
+                    <i class="fa-regular fa-circle-right p-2"></i>
+                    Site URL must be a valid one
+                </li>
+            </ol>
+        </div>
     </div>
 
     <script src="main.js"></script>
